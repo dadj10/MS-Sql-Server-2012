@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Test</title>
+  </head>
+  <body>
+    <form id="formulaire">
+      <label for="field">Mon fichier: </label>
+      <input type="file" id="field" name="field">
+      <br/><br/>
+      <input type="submit" value="Test">
+    </form>
+  </body>
+</html>
+
+<script type="text/javascript">
+	(function ($) {
+		// je crée mon validateur
+		jQuery.validator.addMethod('checkExtension', function (value, element, params) {
+		  	// je crée une expression régulière dynamique
+		    // de sorte à personnaliser les extensions (ça fait fun)
+		    // l'expression régulière du type [\s\S]+.(extension1|extension2|...)
+		    var exts	= '(' + params.join('|') + ')';
+		    var regxp = new RegExp('[\\s\\S]+.'+ exts +'$', 'i');
+		    
+		  	return this.optional(element) || regxp.test(value);
+	  	}, "Ce type de fichier n'est pas autorisé");
+	  
+	  // je l'integre à mon formulaire
+	  $( "#formulaire" ).validate({
+	    rules: {
+	      field: {
+	        required: true,
+	        checkExtension: ['png', 'png', 'jpeg']
+	      }
+	    }
+	  });
+	})(jQuery);
+</script>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>jq validate</title>
+    </head>
+    <body>
+        <form class="" id="myform" action="#!" method="post">
+            <label for="">Le reseau</label> <br>
+            <select name="" id="network-choose">
+                <option value="orange">Orange</option>
+                <option value="mtn">Mtn</option>
+                <option value="moov">Moov</option>
+            </select>
+
+            <br><br>
+
+            <label for="">Votre numero</label> <br>
+            <input type="text" name="callnumber" value=""> <br><br>
+
+            <input type="submit" name="" value="Let's go">
+        </form>
+
+        <script src="https://code.jquery.com/jquery-1.11.1.min.js" charset="utf-8"></script>
+        <script src="jq.validate.js" charset="utf-8"></script>
+        <script type="text/javascript">
+            $(function () {
+
+                /* on repertorie les numero par reseau */
+                var networks = {
+                    orange  : [07, 08, 09, 46, 48, 49, 57, 58, 59, 67, 68, 69, 77, 78, 79, 87, 88, 89],
+                    moov    : [01, 02, 03, 41, 42, 43, 51, 52, 53],
+                    mtn     : [04, 05, 06, 44, 45, 46, 54, 55, 56]
+                };
+
+                /* ici on mettra le reseau selectionné */
+                var selectedNetWork = 'orange';
+
+                /* on crée notre propre validateur à l'image de ce que nous on veut */
+                jQuery.validator.addMethod("wow", function (value, element) {
+                    /*
+                        on verifie si c'est que des caratères numeriques et s'il y a 225 au debut
+                        puis on verifie si le numero appartient bien à la classe du reseau choisit.
+                    */
+                    if ( /^225[\d]{8}$/.test(value) && networks[ selectedNetWork ].indexOf(parseInt(value.substr(3, 2))) != -1 ) {
+
+                        /* on retourne que le champ est ok */
+                        return true;
+                    }
+                    else {
+                        /* le gars veut jouer avec notre gamme on retourn faux */
+                        return false;
+                    }
+                }, "Entrez un numero valide !");
+
+                /* on ecoute le changement du reseau choisit */
+                $('#network-choose').on('change', function () {
+                    console.log(this.value);
+                    selectedNetWork = $(this).val();
+                });
+
+                /* et on utilise notre super validateur pour checker */
+                var jq = $('#myform').validate({
+                    rules: {
+                        callnumber: {
+                            required: true,
+                            wow: true
+                        }
+                    }
+                });
+
+            });
+        </script>
+    </body>
+</html>

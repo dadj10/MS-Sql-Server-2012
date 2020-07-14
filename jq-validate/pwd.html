@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>jq validate</title>
+    </head>
+    <body>
+        <form class="" id="myform" action="#!" method="post">
+            <label for="">Votre numero</label> <br>
+            <input type="text" name="pwdvalid" value=""> <br><br>
+
+            <input type="submit" name="" value="Let's go">
+        </form>
+
+        <script src="https://code.jquery.com/jquery-1.11.1.min.js" charset="utf-8"></script>
+        <script src="jq.validate.js" charset="utf-8"></script>
+        <script type="text/javascript">
+            $(function () {
+
+                /* validateur pour numero de téléphone conforme en côte d'ivoire */
+                jQuery.validator.addMethod("pwdvalid", function (value, element) {
+                    return  /[\S]{8,}/.test(value) &&
+                            /[A-Z]{1,}/.test(value) &&
+                            /[a-z]{1,}/.test(value) &&
+                            /[\d]{1,}/.test(value) &&
+                            /[$@()%ù&#*-/\\<>\[\]!:+]{1,}/.test(value);
+                }, "Mot de passe invalid");
+
+                /* et on utilise notre super validateur pour checker */
+                var jq = $('#myform').validate({
+                    rules: {
+                        pwdvalid: {
+                            required: true,
+                            pwdvalid: true
+                        }
+                    }
+                });
+
+            });
+        </script>
+    </body>
+</html>
